@@ -18,17 +18,25 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'mvn -B test'
+                dir('starter') {
+                    sh 'mvn -B test'
+                }
             }
             post {
                 always {
-                    junit 'target/test-reports/*.xml'
+                    dir('starter') {
+                        junit 'target/surefire-reports/*.xml'
+                    }
+                    
                 }
             }
         }
         stage('Archive') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                dir('starter') {
+                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                }
+                
             }
         }
     }
